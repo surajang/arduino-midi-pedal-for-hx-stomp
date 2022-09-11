@@ -32,7 +32,7 @@ HX stomp is a great device for me though, it has only 3 footswitches(FS) so the 
 
 ## Features
 - SW debouncing for 2 switch inputs for robust user experience
-- Can recognise 3 input types (SW1, SW2, SW1+2)
+- Can recognise 3 input types (SW1, SW2, SW1+2) which emulates FS4, FS5 and Tuner.
 
 ## DIYable Parts
 - Change the CC# to control different feature of your MIDI device
