@@ -5,18 +5,16 @@
 
 // Switch connection
 const byte sw1 = 2;                      // Connect Switch1 to D2 (Pull down, Normally Open, pressed=HIGH)
-const byte sw2 = 3;                      // Connect Switch2 to D3 (Pull down, Normally Open, pressed=HIGH)
+const byte sw2 = 5;                      // Connect Switch2 to D5 (Pull down, Normally Open, pressed=HIGH)
 const byte sw3 = 4;                      // Connect Switch3 to D4 (Pull down, Normally Open, pressed=HIGH)
-const byte sw4 = 5;                      // Connect Switch4 to D5 (Pull down, Normally Open, pressed=HIGH)
+const byte sw4 = 3;                      // Connect Switch4 to D3 (Pull down, Normally Open, pressed=HIGH)
 
 // EXP pedal connection
-const byte expedal = A0;
+const byte expedal = A6;
 
-// LED connection: digital pin 6 - 9
-const byte led1 = 6;
-const byte led2 = 7;
-const byte led3 = 8;
-const byte led4 = 9;
+// LED connection: digital pin 10, 11
+const byte led1 = 10;
+const byte led2 = 11;
 
 // MIDI CC# for HX Stomp setting
 const byte fs4 = 52;    // Foot Switch 4
@@ -41,8 +39,7 @@ void setup() {
   pinMode(sw4, INPUT);
   pinMode(led1, OUTPUT);
   pinMode(led2, OUTPUT);
-  pinMode(led3, OUTPUT);
-  pinMode(led4, OUTPUT);
+  digitalWrite(led1, HIGH); // POWER status LED
 }
 
 void loop() {                                     // tempReading = 0b00000000 : stores the raw inputs from switches to each bits.
@@ -50,13 +47,14 @@ void loop() {                                     // tempReading = 0b00000000 : 
   bitWrite(tempReading, 0, digitalRead(sw1));     //                     |||+- SW1
   bitWrite(tempReading, 1, digitalRead(sw2));     //                     ||+-- SW2
   bitWrite(tempReading, 2, digitalRead(sw3));     //                     |+--- SW3
-  //bitWrite(tempReading, 3, digitalRead(sw4));     //                     +---- SW4
+  bitWrite(tempReading, 3, digitalRead(sw4));     //                     +---- SW4
 
   // for switch state indicator LEDs
-  digitalWrite(led1, bitRead(tempReading, 0));
-  digitalWrite(led2, bitRead(tempReading, 1));
-  digitalWrite(led3, bitRead(tempReading, 2));
-  digitalWrite(led4, bitRead(tempReading, 3));
+  if(tempReading != 0) {
+    digitalWrite(led2, HIGH); // Active status LED
+  } else {
+    digitalWrite(led2, LOW);
+  }
   //Serial.println(tempReading);
   //Check input change & set timer
   if (tempReading != prevButtonState) {
@@ -82,10 +80,10 @@ void sendMessage() {
   byte control;
   switch (buttonState) {
     case 1:             //0b0001
-      control = fs4;
+      control = fs5;
       break;
     case 2:             //0b0010
-      control = fs5;
+      control = fs4;
       break;
     case 4:             //0b0100
       control = tuner;
