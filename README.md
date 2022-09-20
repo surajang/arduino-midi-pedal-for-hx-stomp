@@ -1,6 +1,6 @@
 # Arduino MIDI pedal for LINE6 HX Stomp
 
-This repo contains source code for an Arduino sketch that emulates FS4 and 5 of LINE 6 HX Stomp via MIDI interface.
+This repo contains source code for an Arduino sketch that emulates 4 foot switches of LINE 6 HX Stomp via MIDI interface.
 
 ## What is this good for?
 HX stomp is a great device for me though, it has only 3 footswitches(FS) so the control is quite limited. To use more FS you can plug in some 2-switch box to EXP/FS socket but if you're using this port for an expression pedal than have no luck. So the solution is using built-in MIDI interface and Arduino. You know, we are MAKERS :)
