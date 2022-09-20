@@ -8,10 +8,10 @@ HX stomp is a great device for me though, it has only 3 footswitches(FS) so the 
 ## HW Parts
 - 1 x Arduino
   - Tested with Arduino UNO. Others with same spec. should work
-- 2 x momentary switches
+- 4 x momentary switches
   - Bring your favorite pedal switches (any momentary on/off switch works)
 - 2 x LEDs of your choice
-  - Optional. For switch indicators.
+  - Optional. One for power, the other indicates activation status
 - 1 x 5-PIN DIN female MIDI socket
   - Good old MIDI interface socket
 - 2 x 220 ohm resistors
@@ -23,17 +23,20 @@ HX stomp is a great device for me though, it has only 3 footswitches(FS) so the 
   - Arduino GND to Pin 2 of MIDI socket
   - Arduino + 5V to pin 4 of MIDI socket through 220ohm resistor
 - Switches
-  - Arduino Pin 2, 3 to each momentary switches that connect to ground
+  - Arduino Pin 2, 3, 4, 5 to each momentary switches that connect to ground
 - Switch Indicator
-  - Arduino Pin 4, 5 to each LEDs (use appropriate resistors)
+  - Arduino Pin 10, 11 to each LEDs (use appropriate resistors)
 
 ## Arduino Library Used
 - [Arduino MIDI Library](https://github.com/FortySevenEffects/arduino_midi_library)
 
 ## Features
-- SW debouncing for 2 switch inputs for robust user experience
-- Can recognise 3 input types (SW1, SW2, SW1+2) which emulates FS4, FS5 and Tuner.
+- SW debouncing for 4 switch inputs for robust user experience
+- Can recognise 4 inputs that emulate FS4, FS5, Tuner & tap tempo switch.
 
 ## DIYable Parts
 - Change the CC# to control different feature of your MIDI device
 - Tune the debounceDelay value for your switch of choice
+
+## Todo
+- Implement analog input feature
