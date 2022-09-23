@@ -28,6 +28,8 @@ unsigned long lastDebounceTime = 0;     // the last time the switch state change
 unsigned long debounceDelay = 50;       // the debounce time (ms)
 byte prevButtonState = 0;               // Saves the previous switch state to each bit: bit 0(LSB) = SW1 ~ bit 3 = SW4
 byte buttonState;                       // Saves the stable switch state
+byte oldExpPedalValue = 0;              // Saves the previous expression pedal input value
+byte newExpPedalValue;                  // Saves the new reading of expression pedal value
 
 MIDI_CREATE_DEFAULT_INSTANCE();
 
@@ -56,12 +58,12 @@ void loop() {                                     // tempReading = 0b00000000 : 
     digitalWrite(led2, LOW);
   }
 
-  //Check input change & set timer
+  // Check input changes & set timer
   if (tempReading != prevButtonState) {
     lastDebounceTime = millis(); 
   }
   
-  //Take input changes as stable input after threshold
+  // Take input changes as stable input after threshold
   if ((millis() - lastDebounceTime) > debounceDelay) {
     
     if (tempReading != buttonState) {
@@ -70,7 +72,9 @@ void loop() {                                     // tempReading = 0b00000000 : 
     }
   }
   prevButtonState = tempReading;
-  //sendPedalMessage();         // will work on this...
+  
+  // Process the analog pedal input
+  sendPedalMessage();         
 }
 
 void sendMessage() {
@@ -96,7 +100,10 @@ void sendMessage() {
 }
 
 void sendPedalMessage() {
-  //Transmit MIDI message of expression pedal control
-  int pedalReading = analogRead(expedal);
-  MIDI.sendControlChange(pedal, map(pedalReading, 0, 1023, 0, 127), 1);
+  //Transmit MIDI CC message of expression pedal control if the input value changed.
+  newExpPedalValue = map(analogRead(expedal), 0, 1023, 0, 127);
+  if(newExpPedalValue != oldExpPedalValue) {
+    MIDI.sendControlChange(pedal, newExpPedalValue, 1);
+    oldExpPedalValue = newExpPedalValue;
+  } else return;
 }
