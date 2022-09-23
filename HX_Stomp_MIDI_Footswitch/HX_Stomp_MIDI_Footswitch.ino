@@ -1,9 +1,9 @@
 #include <MIDI.h>
 
 // : --- MIDI controller for LINE6 HX Stomp ---
-// : Supports 4 momentary witches (FS4, FS5, Tuner, Tap) and 1 expression pedal (EXP2)
+// : Supports 4 momentary witches (FS4, FS5, Tuner, Tap) and 1 analog expression pedal (EXP2)
 
-// Switch connection
+// Define switch - digital pin connections
 const byte sw1 = 2;                      // Connect Switch1 to D2 (Pull down, Normally Open, pressed=HIGH)
 const byte sw2 = 5;                      // Connect Switch2 to D5 (Pull down, Normally Open, pressed=HIGH)
 const byte sw3 = 4;                      // Connect Switch3 to D4 (Pull down, Normally Open, pressed=HIGH)
@@ -26,7 +26,7 @@ const byte pedal = 2;   // Expression Pedal 2
 // Variables for input debouncing
 unsigned long lastDebounceTime = 0;     // the last time the switch state changed
 unsigned long debounceDelay = 50;       // the debounce time (ms)
-byte prevButtonState = 0;          // Saves the previous switch state to each bit: bit 0(LSB) = SW1 ~ bit 3 = SW4
+byte prevButtonState = 0;               // Saves the previous switch state to each bit: bit 0(LSB) = SW1 ~ bit 3 = SW4
 byte buttonState;                       // Saves the stable switch state
 
 MIDI_CREATE_DEFAULT_INSTANCE();
@@ -55,11 +55,10 @@ void loop() {                                     // tempReading = 0b00000000 : 
   } else {
     digitalWrite(led2, LOW);
   }
-  //Serial.println(tempReading);
+
   //Check input change & set timer
   if (tempReading != prevButtonState) {
-    lastDebounceTime = millis();
-    
+    lastDebounceTime = millis(); 
   }
   
   //Take input changes as stable input after threshold
@@ -68,7 +67,6 @@ void loop() {                                     // tempReading = 0b00000000 : 
     if (tempReading != buttonState) {
       buttonState = tempReading;
       sendMessage();
-      
     }
   }
   prevButtonState = tempReading;
@@ -98,7 +96,7 @@ void sendMessage() {
 }
 
 void sendPedalMessage() {
-  //Transmit MIDI message of expression pedal control.. NOT TESTED!!
+  //Transmit MIDI message of expression pedal control
   int pedalReading = analogRead(expedal);
   MIDI.sendControlChange(pedal, map(pedalReading, 0, 1023, 0, 127), 1);
 }
